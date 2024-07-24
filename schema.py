@@ -12,17 +12,14 @@ class Query(graphene.ObjectType):
     search_products = graphene.List(Product, name=graphene.String(), category=graphene.String())
 
     def resolve_products(self, info):
-        # return db.session.execute(db.select(ProductModel)).scalars()
         return db.session.query(ProductModel).all()
 
     def resolve_search_products(root, info, name=None, category=None):
-        # query = db.select(ProductModel)
         query = db.session.query(ProductModel)
         if name:
             query = query.filter(ProductModel.name.ilike(f"%{name}%"))
         if category:
             query = query.filter(ProductModel.category.ilike(f"%{category}%"))
-        # results = db.session.execute(query).scalars().all()
         results = query.all()
         return results
 
